@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=my_secret_pw
+      - MYSQL_DATABASE=banking_transaction_management
+      - MYSQL_USER=banking_management_user
+      - MYSQL_PASSWORD=banking_management_pw
+    ports:
+      - "3306:3306"
+
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile    
+      args:
+        - DB_HOST=mysql
+        - DB_PORT=3306
+        - DB_NAME=banking_transaction_management
+        - DB_USERNAME=banking_management_user
+        - DB_PASSWORD=banking_management_pw
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=banking_transaction_management
+      - DB_USER=banking_management_user
+      - DB_PASSWORD=banking_management_pw
+      - FIRST_USER_NAME=Admin
+      - FIRST_USER_EMAIL=admin@example.com
+      - FIRST_USER_PASSWORD=admin123
